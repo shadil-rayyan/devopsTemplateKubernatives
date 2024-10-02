@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owasp-zap
+  namespace: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: owasp-zap
+  template:
+    metadata:
+      labels:
+        app: owasp-zap
+    spec:
+      containers:
+      - name: owasp-zap
+        image: owasp/zap2docker-stable
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: owasp-zap
+  namespace: devops
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30005
+  selector:
+    app: owasp-zap
